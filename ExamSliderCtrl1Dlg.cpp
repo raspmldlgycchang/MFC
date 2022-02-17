@@ -102,10 +102,22 @@ void CExamSliderCtrl1Dlg::OnNMReleasedcaptureMySlider(NMHDR* pNMHDR, LRESULT* pR
 	*pResult = 0;
 }
 
-
+//중간값TRACK(마우스,키보드)
 void CExamSliderCtrl1Dlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar)
 {
 	if (pScrollBar!=NULL && pScrollBar->GetDlgCtrlID()==IDC_MY_SLIDER) {
+		//
+		//같은코드중복막기위해서 하나로 처리가능한 if문과 else문안의 전체코드를
+		//하나로 nPos를 받거나 만약에 nPos가 안 들어오면 GetPos()함수로 받는다
+		if (nSBCode == SB_THUMBTRACK || nSBCode == SB_ENDSCROLL) {
+			CString str;
+			int pos = m_my_slider.GetPos();
+
+			str.Format(L"%d", pos);
+			int index = m_event_list.InsertString(-1, str);
+			m_event_list.SetCurSel(index);
+		}
+		/*
 		if (nSBCode == SB_THUMBTRACK) {
 			CString str;
 			str.Format(L"%d", nPos);
@@ -113,9 +125,27 @@ void CExamSliderCtrl1Dlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScroll
 			m_event_list.SetCurSel(index);
 		}
 		else if (nSBCode == SB_ENDSCROLL) {
+			//
+			//CString str;
+			//str.Format(L"%d", nPos);//키보드안됨
+			//키보드에서 값을 받아오지 않아 안됨
+
+			//int index = m_event_list.InsertString(-1, str);
+			//m_event_list.SetCurSel(index);
+			//키보드에서 값을 받아오는데 0으로 찍힘
+			//
+
+			//키보드에서 값을 받아와서 제대로 찍힘
+			//슬라이더 컨트롤의 현재 위치를 받아오고 마우스커서맨밑에지정도추가로구현
+			int pos = m_my_slider.GetPos();
 			CString str;
-			str.Format(L"%d", nPos);
+			str.Format(L"%d", pos);
+			//마우스커서지정
+			int index = m_event_list.InsertString(-1, str);
+			m_event_list.SetCurSel(index);
+
 		}
+		*/
 	}
 	
 	CDialogEx::OnHScroll(nSBCode, nPos, pScrollBar);
